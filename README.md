@@ -23,6 +23,9 @@ Its build system allows to automatically download/extract the firmware, apply th
 
 Any form of contribution, suggestions, bug report or feature request for the project will be welcome.
 
+# Devices (s5e8535)
+- Galaxy A16 (a16x): Supported, Maintained (A166B/E)
+
 # Features
 - Based on the latest stable Galaxy S23 firmware
 - Galaxy AI support

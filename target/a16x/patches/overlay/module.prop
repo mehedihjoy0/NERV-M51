@@ -1,0 +1,4 @@
+id=overlay
+name=/product overlay apks
+author=Ksawlii
+description=Replaces /product overlay apks with target ones.

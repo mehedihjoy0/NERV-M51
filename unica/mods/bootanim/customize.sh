@@ -1,5 +1,7 @@
 TWOTHREE_TARGETS=""
 TWOFOUR_TARGETS="a52sxq a73xq m52xq r8q r9q r9q2"
+TWOTHREE_TARGETS="a16x"
+TWOFOUR_TARGETS=""
 
 if echo "$TWOTHREE_TARGETS" | grep -q -w "$TARGET_CODENAME"; then
     cp -a --preserve=all "$SRC_DIR/unica/mods/bootanim/2340x1080/"* "$WORK_DIR/system/system/media"

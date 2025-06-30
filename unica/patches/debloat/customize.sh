@@ -24,18 +24,33 @@ SYSTEM_DEBLOAT="$(sed "/^$/d" <<< "$SYSTEM_DEBLOAT" | sort)"
 SYSTEM_EXT_DEBLOAT="$(sed "/^$/d" <<< "$SYSTEM_EXT_DEBLOAT" | sort)"
 VENDOR_DEBLOAT="$(sed "/^$/d" <<< "$VENDOR_DEBLOAT" | sort)"
 
-[ "$ODM_DEBLOAT" ] && xargs -I "{}" -P "$(nproc)" \
-    bash -c 'source "$SRC_DIR/scripts/utils/module_utils.sh"; DELETE_FROM_WORK_DIR "odm" "$1"' "bash" "{}" \
-    <<< "$ODM_DEBLOAT"
-[ "$PRODUCT_DEBLOAT" ] && xargs -I "{}" -P "$(nproc)" \
-    bash -c 'source "$SRC_DIR/scripts/utils/module_utils.sh"; DELETE_FROM_WORK_DIR "product" "$1"' "bash" "{}" \
-    <<< "$PRODUCT_DEBLOAT"
-[ "$SYSTEM_DEBLOAT" ] && xargs -I "{}" -P "$(nproc)" \
-    bash -c 'source "$SRC_DIR/scripts/utils/module_utils.sh"; DELETE_FROM_WORK_DIR "system" "$1"' "bash" "{}" \
-    <<< "$SYSTEM_DEBLOAT"
-[ "$SYSTEM_EXT_DEBLOAT" ] && xargs -I "{}" -P "$(nproc)" \
-    bash -c 'source "$SRC_DIR/scripts/utils/module_utils.sh"; DELETE_FROM_WORK_DIR "system_ext" "$1"' "bash" "{}" \
-    <<< "$SYSTEM_EXT_DEBLOAT"
-[ "$VENDOR_DEBLOAT" ] && xargs -I "{}" -P "$(nproc)" \
-    bash -c 'source "$SRC_DIR/scripts/utils/module_utils.sh"; DELETE_FROM_WORK_DIR "vendor" "$1"' "bash" "{}" \
-    <<< "$VENDOR_DEBLOAT"
+[ "$ODM_DEBLOAT" ] && echo "$ODM_DEBLOAT" | xargs -I "{}" -P "$(nproc)" \
+    bash -c 'if [ -f "$WORK_DIR/odm/{}" ]; then
+        source "$SRC_DIR/scripts/utils/module_utils.sh"
+        DELETE_FROM_WORK_DIR "odm" "{}"
+    fi'
+
+[ "$PRODUCT_DEBLOAT" ] && echo "$PRODUCT_DEBLOAT" | xargs -I "{}" -P "$(nproc)" \
+    bash -c 'if [ -f "$WORK_DIR/product/{}" ]; then
+        source "$SRC_DIR/scripts/utils/module_utils.sh"
+        DELETE_FROM_WORK_DIR "product" "{}"
+    fi'
+
+[ "$SYSTEM_DEBLOAT" ] && echo "$SYSTEM_DEBLOAT" | xargs -I "{}" -P "$(nproc)" \
+    bash -c 'if [ -f "$WORK_DIR/system/system/{}" ]; then
+        source "$SRC_DIR/scripts/utils/module_utils.sh"
+        DELETE_FROM_WORK_DIR "system" "{}"
+    fi'
+
+[ "$SYSTEM_EXT_DEBLOAT" ] && echo "$SYSTEM_EXT_DEBLOAT" | xargs -I "{}" -P "$(nproc)" \
+    bash -c 'if [ -f "$WORK_DIR/system_ext/{}" ]; then
+        source "$SRC_DIR/scripts/utils/module_utils.sh"
+        DELETE_FROM_WORK_DIR "system_ext" "{}"
+    fi'
+
+[ "$VENDOR_DEBLOAT" ] && echo "$VENDOR_DEBLOAT" | xargs -I "{}" -P "$(nproc)" \
+    bash -c 'if [ -f "$WORK_DIR/vendor/{}" ]; then
+        source "$SRC_DIR/scripts/utils/module_utils.sh"
+        DELETE_FROM_WORK_DIR "vendor" "{}"
+    fi'
+

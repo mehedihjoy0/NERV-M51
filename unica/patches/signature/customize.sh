@@ -1,5 +1,5 @@
 CERT_PREFIX="aosp"
-$ROM_IS_OFFICIAL && CERT_PREFIX="unica"
+$ROM_IS_OFFICIAL && CERT_PREFIX="nerv"
 
 CERT_SIGNATURE=$(cat "$SRC_DIR/security/${CERT_PREFIX}_platform.x509.pem" | \
     sed '/CERTIFICATE/d' | tr -d '\n' | base64 -d | xxd -p -c 0)

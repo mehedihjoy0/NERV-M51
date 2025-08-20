@@ -51,6 +51,57 @@ ABORT()
     return 1
 }
 
+# ADD_SELINUX_ENTRY <partition> <cil> <entry>
+# Adds selinux entry to specified cil file
+ADD_SELINUX_ENTRY()
+{
+    _CHECK_NON_EMPTY_PARAM "PARTITION" "$1" || return 1
+    _CHECK_NON_EMPTY_PARAM "FILE" "$2" || return 1
+
+    local PARTITION="$1"
+    local FILE="$2"
+    local ENTRY="$3"
+
+    if ! IS_VALID_PARTITION_NAME "$PARTITION"; then
+        LOGE "\"$PARTITION\" is not a valid partition name"
+        return 1
+    fi
+
+    while [[ "${FILE:0:1}" == "/" ]]; do
+        FILE="${FILE:1}"
+    done
+
+    if ! $TARGET_HAS_SYSTEM_EXT && [[ "$PARTITION" == "system_ext" ]]; then
+        PARTITION="system"
+        FILE="system/system_ext/$FILE"
+    fi
+
+    local FILE_PATH="$WORK_DIR"
+    case "$PARTITION" in
+        "system_ext")
+            if $TARGET_HAS_SYSTEM_EXT; then
+                FILE_PATH+="/system_ext"
+            else
+                FILE_PATH+="/system/system/system_ext"
+            fi
+            ;;
+        *)
+            FILE_PATH+="/$PARTITION"
+            ;;
+    esac
+    FILE_PATH+="/$FILE"
+
+    if [ ! -e "$FILE_PATH" ] && [ ! -L "$FILE_PATH" ]; then
+        LOGE "File not found: ${FILE_PATH//$WORK_DIR/}"
+        return 1
+    fi
+
+    if ! grep -qF "$ENTRY" "$FILE_PATH"; then
+        LOG "- Adding \"$ENTRY\" to $(sed -e "s|$WORK_DIR||" -e "s|/\.||" <<< "$FILE_PATH")"
+        echo "$ENTRY" >> "$FILE_PATH"
+    fi
+}
+
 # APPLY_PATCH <partition> <apk/jar> <patch>
 # Applies a unified diff patch to the provided APK/JAR decoded directory.
 APPLY_PATCH()
@@ -342,4 +393,55 @@ SET_PROP_IF_DIFF()
     local CURRENT
     CURRENT="$(GET_PROP "$PARTITION" "$PROP")"
     [ -z "$CURRENT" ] || [ "$CURRENT" = "$EXPECTED" ] || SET_PROP "$PARTITION" "$PROP" "$EXPECTED"
+}
+
+# REMOVE_SELINUX_ENTRY <partition> <cil> <entry>
+# Removes selinux entry from specified cil file
+REMOVE_SELINUX_ENTRY()
+{
+    _CHECK_NON_EMPTY_PARAM "PARTITION" "$1" || return 1
+    _CHECK_NON_EMPTY_PARAM "FILE" "$2" || return 1
+
+    local PARTITION="$1"
+    local FILE="$2"
+    local ENTRY="$3"
+
+    if ! IS_VALID_PARTITION_NAME "$PARTITION"; then
+        LOGE "\"$PARTITION\" is not a valid partition name"
+        return 1
+    fi
+
+    while [[ "${FILE:0:1}" == "/" ]]; do
+        FILE="${FILE:1}"
+    done
+
+    if ! $TARGET_HAS_SYSTEM_EXT && [[ "$PARTITION" == "system_ext" ]]; then
+        PARTITION="system"
+        FILE="system/system_ext/$FILE"
+    fi
+
+    local FILE_PATH="$WORK_DIR"
+    case "$PARTITION" in
+        "system_ext")
+            if $TARGET_HAS_SYSTEM_EXT; then
+                FILE_PATH+="/system_ext"
+            else
+                FILE_PATH+="/system/system/system_ext"
+            fi
+            ;;
+        *)
+            FILE_PATH+="/$PARTITION"
+            ;;
+    esac
+    FILE_PATH+="/$FILE"
+
+    if [ ! -e "$FILE_PATH" ] && [ ! -L "$FILE_PATH" ]; then
+        LOGE "File not found: ${FILE_PATH//$WORK_DIR/}"
+        return 1
+    fi
+
+    if grep -qF "$ENTRY" "$FILE_PATH"; then
+        LOG "- Removing \"$ENTRY\" from $(sed -e "s|$WORK_DIR||" -e "s|/\.||" <<< "$FILE_PATH")"
+        sed -i "\|${ENTRY}|d" "$FILE_PATH"
+    fi
 }

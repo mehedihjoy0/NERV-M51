@@ -1,9 +1,9 @@
-LOG_STEP_IN "- Updating MIDAS [A73XQ]"
+LOG_STEP_IN "- Adding a73xqxx MIDAS"
 DELETE_FROM_WORK_DIR "vendor" "etc/midas"
 ADD_TO_WORK_DIR "a73xqxx" "vendor" "etc/midas"
 LOG_STEP_OUT
 
-LOG_STEP_IN "- Fixing MIDAS model detection [m52xq --> a73xq]"
+LOG_STEP_IN "- Fixing MIDAS model detection"
 sed -i "s/m52xq/dummy/g" "$WORK_DIR/vendor/etc/midas/midas_config.json"
 sed -i "s/a73xq/m52xq/g" "$WORK_DIR/vendor/etc/midas/midas_config.json"
 sed -i "s/ro.product.device/ro.product.vendor.device/g" "$WORK_DIR/vendor/etc/midas/midas_config.json"
@@ -13,7 +13,7 @@ if ! grep -q "vendor_firmware_file (file (mounton" "$WORK_DIR/vendor/etc/selinux
 fi
 LOG_STEP_OUT
 
-LOG_STEP_IN "- Updating Face HAL [2.0 --> 3.0]"
+LOG_STEP_IN "- Adding a73xqxx Face HAL"
 BLOBS_LIST="
 bin/hw/vendor.samsung.hardware.biometrics.face@2.0-service
 etc/init/vendor.samsung.hardware.biometrics.face@2.0-service.rc
@@ -31,11 +31,11 @@ ADD_TO_WORK_DIR "a73xqxx" "vendor" "lib64/vendor.samsung.hardware.biometrics.fac
 ADD_TO_WORK_DIR "a73xqxx" "vendor" "lib64/vendor.samsung.hardware.biometrics.face@3.0.so"
 LOG_STEP_OUT
 
-LOG_STEP_IN "- Updating wpa_supplicant for One UI 7 from A73XQ"
+LOG_STEP_IN "- Adding a73xqxx wpa_supplicant"
 ADD_TO_WORK_DIR "a73xqxx" "vendor" "bin/hw/wpa_supplicant"
 LOG_STEP_OUT
 
-LOG_STEP_IN "- Fixing brightness [Light HAL from A73XQ]"
+LOG_STEP_IN "- Adding a73xqxx Light HAL"
 ADD_TO_WORK_DIR "a73xqxx" "vendor" "bin/hw/vendor.samsung.hardware.light-service"
 ADD_TO_WORK_DIR "a73xqxx" "vendor" "lib64/android.hardware.light-V1-ndk_platform.so"
 ADD_TO_WORK_DIR "a73xqxx" "vendor" "lib64/vendor.samsung.hardware.light-V1-ndk_platform.so"

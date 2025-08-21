@@ -1,5 +1,3 @@
-SKIPUNZIP=1
-
 rm -f "$WORK_DIR/kernel/"*.img
 
 LOG "- Replacing kernel binaries with Rio (Vanilla)"

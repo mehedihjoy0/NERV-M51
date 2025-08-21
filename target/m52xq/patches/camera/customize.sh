@@ -3,6 +3,7 @@ if ! grep -q "Camera End" "$WORK_DIR/vendor/ueventd.rc"; then
     cat "$SRC_DIR/target/m52xq/patches/camera/ueventd" >> "$WORK_DIR/vendor/ueventd.rc"
 fi
 
+LOG_STEP_IN "- Replacing camera blobs"
 BLOBS_LIST="
 system/lib/FrcMcWrapper.so
 system/lib/libFrucPSVTLib.so
@@ -70,7 +71,6 @@ do
     DELETE_FROM_WORK_DIR "system" "$blob"
 done
 
-LOG_STEP_IN "- Adding stock camera libs"
 BLOBS_LIST="
 system/lib64/libFacialStickerEngine.arcsoft.so
 system/lib64/libHpr_RecFace_dl_v1.0.camera.samsung.so

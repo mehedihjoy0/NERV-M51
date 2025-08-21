@@ -105,6 +105,15 @@ GET_SRC_DIR()
     fi
 }
 
+IS_ARCH_GENTOO()
+{
+    if grep -qiE "Arch|Gentoo" "/etc/os-release" 2> /dev/null; then
+        echo "OFF"
+    else
+        echo "ON"
+    fi
+}
+
 # https://github.com/canonical/snapd/blob/ec7ea857712028b7e3be7a5f4448df575216dbfd/release/release.go#L169-L190
 IS_WSL()
 {
@@ -191,7 +200,7 @@ fi
 if $ANDROID_TOOLS; then
     ANDROID_TOOLS_CMDS=(
         "git submodule foreach --recursive \"git am --abort || true\""
-        "cmake -B \"build\" $(GET_CMAKE_FLAGS) -DANDROID_TOOLS_USE_BUNDLED_FMT=ON -DANDROID_TOOLS_USE_BUNDLED_LIBUSB=ON"
+        "cmake -B \"build\" $(GET_CMAKE_FLAGS) -DANDROID_TOOLS_USE_BUNDLED_FMT=$(IS_ARCH_GENTOO) -DANDROID_TOOLS_USE_BUNDLED_LIBUSB=ON"
         "make -C \"build\" -j\"$(nproc)\""
         "find \"build/vendor\" -maxdepth 1 -type f -exec test -x {} \; -exec cp -a {} \"$TOOLS_DIR/bin\" \;"
         "cp -a \"vendor/avb/avbtool.py\" \"$TOOLS_DIR/bin/avbtool\""

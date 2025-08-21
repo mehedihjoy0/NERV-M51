@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2023 Salvo Giangreco
+# Copyright (C) 2025 Salvo Giangreco
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -39,7 +39,6 @@ TARGET_FP_SENSOR_CONFIG="google_touch_display_optical,settings=3"
 TARGET_HAS_HW_MDNIE=false
 TARGET_HAS_MASS_CAMERA_APP=true
 TARGET_HAS_QHD_DISPLAY=false
-#TARGET_HFR_MODE="1"
 TARGET_HFR_MODE="2"
 TARGET_HFR_SUPPORTED_REFRESH_RATE="60,120"
 TARGET_HFR_DEFAULT_REFRESH_RATE="120"

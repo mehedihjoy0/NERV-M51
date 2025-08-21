@@ -1,4 +1,3 @@
-# Fix camera lock for devices with a rear SLSI sensor
 LOG_STEP_IN "- Patching camera HAL"
 HAL_LIBS="
 $WORK_DIR/vendor/lib/hw/camera.qcom.so
@@ -10,7 +9,7 @@ for f in $HAL_LIBS; do
     sed -i "s/ro.boot.flash.locked/ro.camera.notify_nfc/g" "$f"
 done
 
-# Fix system camera libs
+LOG_STEP_IN "- Removing source camera blobs"
 BLOBS_LIST="
 system/lib/FrcMcWrapper.so
 system/lib/libFrucPSVTLib.so
@@ -18,7 +17,6 @@ system/lib/libSemanticMap_v1.camera.samsung.so
 system/lib/libSlowShutter-core.so
 system/lib/libaifrc.aidl.quram.so
 system/lib/libaifrcInterface.camera.samsung.so
-system/lib/libgpuss_wrapper.so
 system/lib/libmcaimegpu.samsung.so
 system/lib/vendor.samsung.hardware.frcmc-V1-ndk.so
 system/lib64/FrcMcWrapper.so
@@ -28,7 +26,6 @@ system/lib64/libAIQSolution_MPISingleRGB40.camera.samsung.so
 system/lib64/libBestPhoto.camera.samsung.so
 system/lib64/libDeepDocRectify.camera.samsung.so
 system/lib64/libDocDeblur.camera.samsung.so
-system/lib64/libDocDeblur.enhanceX.samsung.so
 system/lib64/libDocObjectRemoval.camera.samsung.so
 system/lib64/libDocObjectRemoval.enhanceX.samsung.so
 system/lib64/libDocShadowRemoval.arcsoft.so
@@ -63,7 +60,6 @@ system/lib64/libarcsoft_single_cam_glasses_seg.so
 system/lib64/libdualcam_refocus_image.so
 system/lib64/libdvs.camera.samsung.so
 system/lib64/libfrtracking_engine.arcsoft.so
-system/lib64/libgpuss_wrapper.so
 system/lib64/libhigh_dynamic_range_bokeh.so
 system/lib64/libhybridHDR_wrapper.camera.samsung.so
 system/lib64/libhybrid_high_dynamic_range.arcsoft.so
@@ -80,8 +76,9 @@ for blob in $BLOBS_LIST
 do
     DELETE_FROM_WORK_DIR "system" "$blob"
 done
+LOG_STEP_OUT
 
-echo "Add stock camera libs"
+LOG_STEP_IN "- Adding source camera blobs"
 BLOBS_LIST="
 system/etc/public.libraries-camera.samsung.txt
 system/lib/libSlowShutter_jni.media.samsung.so

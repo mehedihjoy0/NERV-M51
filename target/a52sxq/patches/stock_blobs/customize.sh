@@ -1,16 +1,16 @@
+LOG_STEP_IN "- Adding stock system features"
 DELETE_FROM_WORK_DIR "system" "system/etc/permissions/com.sec.feature.cover.clearcameraviewcover.xml"
 DELETE_FROM_WORK_DIR "system" "system/etc/permissions/com.sec.feature.cover.flip.xml"
 DELETE_FROM_WORK_DIR "system" "system/etc/permissions/com.sec.feature.pocketsensitivitymode_level1.xml"
 DELETE_FROM_WORK_DIR "system" "system/etc/permissions/com.sec.feature.sensorhub_level29.xml"
 DELETE_FROM_WORK_DIR "system" "system/etc/permissions/com.sec.feature.wirelesscharger_authentication.xml"
-LOG_STEP_IN "- Adding stock system features"
 ADD_TO_WORK_DIR "$TARGET_FIRMWARE" "system" "system/etc/permissions/com.sec.feature.cover.minisviewwalletcover.xml" 0 0 644 "u:object_r:system_file:s0"
 ADD_TO_WORK_DIR "$TARGET_FIRMWARE" "system" "system/etc/permissions/com.sec.feature.sensorhub_level40.xml" 0 0 644 "u:object_r:system_file:s0"
 LOG_STEP_OUT
 
+LOG_STEP_IN "- Adding a73xqxx WFD blobs"
 DELETE_FROM_WORK_DIR "system" "system/lib64/libhdcp_client_aidl.so"
 DELETE_FROM_WORK_DIR "system" "system/lib64/vendor.samsung.hardware.security.hdcp.wifidisplay-V2-ndk.so"
-LOG_STEP_IN "- Adding a73xq WFD blobs"
 ADD_TO_WORK_DIR "a73xqxx" "system" "system/bin/insthk" 0 2000 755 "u:object_r:insthk_exec:s0"
 ADD_TO_WORK_DIR "a73xqxx" "system" "system/bin/remotedisplay" 0 2000 755 "u:object_r:remotedisplay_exec:s0"
 ADD_TO_WORK_DIR "a73xqxx" "system" "system/lib64/libhdcp2.so" 0 0 644 "u:object_r:system_lib_file:s0"
@@ -21,11 +21,12 @@ ADD_TO_WORK_DIR "a73xqxx" "system" "system/lib64/libsecuibc.so" 0 0 644 "u:objec
 ADD_TO_WORK_DIR "a73xqxx" "system" "system/lib64/libstagefright_hdcp.so" 0 0 644 "u:object_r:system_lib_file:s0"
 LOG_STEP_OUT
 
-LOG_STEP_IN "- Adding a73xq libhwui"
+LOG_STEP_IN "- Adding a73xqxx libhwui"
 ADD_TO_WORK_DIR "a73xqxx" "system" "system/lib/libhwui.so"
 ADD_TO_WORK_DIR "a73xqxx" "system" "system/lib64/libhwui.so"
 LOG_STEP_OUT
 
+LOG_STEP_IN "- Adding a73xqxx keymaster libs"
 DELETE_FROM_WORK_DIR "system" "system/lib/android.hardware.security.keymint-V2-ndk.so"
 DELETE_FROM_WORK_DIR "system" "system/lib/android.hardware.security.secureclock-V1-ndk.so"
 DELETE_FROM_WORK_DIR "system" "system/lib/libdk_native_keymint.so"
@@ -33,7 +34,6 @@ DELETE_FROM_WORK_DIR "system" "system/lib/vendor.samsung.hardware.keymint-V2-ndk
 DELETE_FROM_WORK_DIR "system" "system/lib64/android.hardware.security.keymint-V2-ndk.so"
 DELETE_FROM_WORK_DIR "system" "system/lib64/libdk_native_keymint.so"
 DELETE_FROM_WORK_DIR "system" "system/lib64/vendor.samsung.hardware.keymint-V2-ndk.so"
-LOG_STEP_IN "- Adding a73xq keymaster libs"
 ADD_TO_WORK_DIR "a73xqxx" "system" "system/lib/android.hardware.keymaster@3.0.so" 0 0 644 "u:object_r:system_lib_file:s0"
 ADD_TO_WORK_DIR "a73xqxx" "system" "system/lib/android.hardware.keymaster@4.0.so" 0 0 644 "u:object_r:system_lib_file:s0"
 ADD_TO_WORK_DIR "a73xqxx" "system" "system/lib/android.hardware.keymaster@4.1.so" 0 0 644 "u:object_r:system_lib_file:s0"
@@ -63,17 +63,17 @@ ADD_TO_WORK_DIR "a73xqxx" "product" "priv-app/HotwordEnrollmentOKGoogleEx3HEXAGO
 ADD_TO_WORK_DIR "a73xqxx" "product" "priv-app/HotwordEnrollmentXGoogleEx3HEXAGON"
 LOG_STEP_OUT
 
-LOG_STEP_IN "- Adding manifest xmls"
+LOG_STEP_IN "- Adding a73xqxx manifest xmls"
 ADD_TO_WORK_DIR "a73xqxx" "system" "system/etc/vintf/manifest.xml"
 ADD_TO_WORK_DIR "a73xqxx" "system" "system/etc/vintf/compatibility_matrix.device.xml"
 LOG_STEP_OUT
 
-LOG_STEP_IN "- Adding a73xq saiv blobs"
+LOG_STEP_IN "- Adding a73xqxx saiv blobs"
 DELETE_FROM_WORK_DIR "system" "system/saiv"
 ADD_TO_WORK_DIR "a73xqxx" "system" "system/saiv" 0 0 755 "u:object_r:system_file:s0"
 LOG_STEP_OUT
 
-LOG_STEP_IN "- Adding pa1q nfc blobs"
+LOG_STEP_IN "- Adding pa1qxx nfc blobs"
 DELETE_FROM_WORK_DIR "system" "system/lib64/libnfc_nxpsn_jni.so"
 DELETE_FROM_WORK_DIR "system" "system/priv-app/NfcNci/lib/arm64/libnfc_nxpsn_jni.so"
 ADD_TO_WORK_DIR "pa1qxx" "system" "system/lib64/libnfc_sec_jni.so"
@@ -83,11 +83,11 @@ ADD_TO_WORK_DIR "pa1qxx" "system" "system/lib64/libstatslog_nfc.so"
 ADD_TO_WORK_DIR "pa1qxx" "system" "system/priv-app/NfcNci/lib/arm64/libnfc_sec_jni.so"
 LOG_STEP_OUT
 
-LOG_STEP_IN "- Adding wpa_supplicant for One UI 7 from A73XQ"
+LOG_STEP_IN "- Adding a73xqxx wpa_supplicant"
 ADD_TO_WORK_DIR "a73xqxx" "vendor" "bin/hw/wpa_supplicant"
 LOG_STEP_OUT
 
-LOG_STEP_IN "- Fixing brightness [Light HAL from A73XQ]"
+LOG_STEP_IN "- Adding a73xqxx light HAL"
 ADD_TO_WORK_DIR "a73xqxx" "vendor" "bin/hw/vendor.samsung.hardware.light-service"
 ADD_TO_WORK_DIR "a73xqxx" "vendor" "lib64/android.hardware.light-V1-ndk_platform.so"
 ADD_TO_WORK_DIR "a73xqxx" "vendor" "lib64/vendor.samsung.hardware.light-V1-ndk_platform.so"

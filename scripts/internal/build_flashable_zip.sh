@@ -26,7 +26,8 @@ TARGET_FINGERPRINT="${TARGET_FINGERPRINT//$(GET_PROP "$FW_DIR/$TARGET_FIRMWARE_P
 
 TMP_DIR="$OUT_DIR/zip"
 
-ZIP_FILE_SUFFIX=".zip"
+ZIP_FILE_SUFFIX="-sign.zip"
+! $ROM_IS_OFFICIAL && ZIP_FILE_SUFFIX=".zip"
 
 TARGET_DEVICE="$TARGET_CODENAME"
 [ -n "$TARGET_MODEL" ] && TARGET_DEVICE="$TARGET_MODEL"
@@ -36,6 +37,18 @@ while [ -f "$OUT_DIR/$ZIP_FILE_NAME" ]; do
     INCREMENTAL=$((INCREMENTAL + 1))
     ZIP_FILE_NAME="ProjectNERV_${ROM_VERSION}_$(date +%Y%m%d)-${INCREMENTAL}_${TARGET_DEVICE}${ZIP_FILE_SUFFIX}"
 done
+
+PRIVATE_KEY_PATH="$SRC_DIR/security/"
+PUBLIC_KEY_PATH="$SRC_DIR/security/"
+if $ROM_IS_OFFICIAL; then
+    PRIVATE_KEY_PATH+="platform"
+    PUBLIC_KEY_PATH+="platform"
+else
+    PRIVATE_KEY_PATH+="aosp_platform"
+    PUBLIC_KEY_PATH+="aosp_platform"
+fi
+PRIVATE_KEY_PATH+=".pk8"
+PUBLIC_KEY_PATH+=".x509.pem"
 
 trap 'rm -rf "$TMP_DIR"' EXIT INT
 
@@ -575,6 +588,12 @@ while IFS= read -r f; do
     fi
 done < <(find "$TMP_DIR" -type f ! -name "*.zip")
 
-mv -f "$TMP_DIR/rom.zip" "$OUT_DIR/$ZIP_FILE_NAME"
+if $ROM_IS_OFFICIAL; then
+    LOG "- Signing zip"
+    EVAL "signapk -w \"$PUBLIC_KEY_PATH\" \"$PRIVATE_KEY_PATH\" \"$TMP_DIR/rom.zip\" \"$OUT_DIR/$ZIP_FILE_NAME\"" || exit 1
+    rm -f "$TMP_DIR/rom.zip"
+else
+    mv -f "$TMP_DIR/rom.zip" "$OUT_DIR/$ZIP_FILE_NAME"
+fi
 
 exit 0

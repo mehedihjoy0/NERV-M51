@@ -79,7 +79,20 @@ do
     DELETE_FROM_WORK_DIR "system" "$blob"
 done
 
+LOG_STEP_IN "- Adding FunMode"
+ADD_TO_WORK_DIR "a73xqxx" "system" "system/app/FunModeSDK/FunModeSDK.apk" 0 0 644 "u:object_r:system_file:s0"
+LOG_STEP_OUT
+
+LOG_STEP_IN "- Adding Stock polarr libs"
+ADD_TO_WORK_DIR "$TARGET_FIRMWARE" "system" "system/etc/public.libraries-polarr.txt" 0 0 644 "u:object_r:system_file:s0"
+LOG_STEP_OUT
+
 BLOBS_LIST="
+system/lib64/libBestComposition.polarr.so
+system/lib64/libFeature.polarr.so
+system/lib64/libPolarrSnap.polarr.so
+system/lib64/libTracking.polarr.so
+system/lib64/libYuv.polarr.so
 system/lib64/libFace_Landmark_Engine.camera.samsung.so
 system/lib64/libFaceRestoration.camera.samsung.so
 system/lib64/libFacialStickerEngine.arcsoft.so

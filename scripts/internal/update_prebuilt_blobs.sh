@@ -108,8 +108,7 @@ case "$1" in
         FIRMWARE="SM-S9210/CHC/356724910402671"
         ;;
     *)
-        echo "Firmware not set for path $1"
-        exit 1
+        ABORT "Firmware not set for path $1"
         ;;
 esac
 

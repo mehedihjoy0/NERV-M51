@@ -71,9 +71,6 @@ case "$1" in
     "prebuilts/samsung/a36xqnaxx")
         FIRMWARE="SM-A366E/INS/357178223702799"
         ;;
-    "prebuilts/samsung/a52sxqxx")
-        FIRMWARE="SM-A528B/BTU/352599501234566"
-        ;;
     "prebuilts/samsung/a73xqxx")
         FIRMWARE="SM-A736B/XME/352828291234563"
         ;;

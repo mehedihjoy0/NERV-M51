@@ -17,8 +17,6 @@ jobs:
             path: "prebuilts/samsung/a05snsdxx"
           - module: "Galaxy A36 5G (a36xqnaxx)"
             path: "prebuilts/samsung/a36xqnaxx"
-          - module: "Galaxy A52s 5G (a52sxqxx)"
-            path: "prebuilts/samsung/a52sxqxx"
           - module: "Galaxy A73 5G (a73xqxx)"
             path: "prebuilts/samsung/a73xqxx"
           - module: "Galaxy Z Fold5 (b5qxxx)"

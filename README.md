@@ -15,7 +15,7 @@
 </p>
 
 <p align="center">
-  <a href="https://t.me/groupzie">💬 NERV Telegram</a>
+  <a href="https://t.me/SE_NERV">💬 NERV Telegram</a>
 </p>
 
 # What is UN1CA?

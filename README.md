@@ -28,7 +28,10 @@ Any form of contribution, suggestions, bug report or feature request for the pro
 NERV is a fork of UN1CA; to make the build system work with One UI 7, we are aiming for an UN1CA-like experience with what we can do. All changes have been made under GPLv3, if you see any problems about credits at repo, please kindly report to me at Telegram, XDA or email. 
 
 # Features
-- Based on the latest stable Galaxy S23 (Paradigm) / A73 5G (Fun) Firmware
+- Based on the latest Samsung devices firmware:
+  - Galaxy S23 (Paradigm)
+  - Galaxy S23 FE (Paradigm)
+  - Galaxy A73 5G (Fun)
 - Galaxy AI support
 - App Lock Support
 - High end animations
@@ -36,7 +39,6 @@ NERV is a fork of UN1CA; to make the build system work with One UI 7, we are aim
 - ASKS disabled 
 - APK Downgrade support
 - Native/live blur support (Paradigm)
-- AOD clock transition support
 - Adaptive refresh rate support (Paradigm)
 - Extra brightness support
 - Picture remaster support

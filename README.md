@@ -71,8 +71,8 @@ A big thanks goes to the following for their invaluable contributions in no part
 - **[ananjaser1211](https://github.com/ananjaser1211)** for troubleshooting and his time
 - **[iDrinkCoffee](https://github.com/iDrinkCoffee-TG)** and **[RisenID](https://github.com/RisenID)** for documentation revisioning
 - **[LineageOS Team](https://www.lineageos.org/)** for their original [OTA updater implementation](https://github.com/LineageOS/android_packages_apps_Updater)
-- **[All Kangers]** for making me laugh with your rebranded repos with no difference
 - **[Bobert10](https://t.me/bobert10)** for the NERV banner
+- **[All Kangers]** for making me laugh with your rebranded repos with no difference
 - *All the UN1CA project contributors and testers ❤️*
 
 # Stargazers over time

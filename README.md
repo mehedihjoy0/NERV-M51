@@ -2,8 +2,8 @@
   <img loading="lazy" src="readme-res/banner.png"/>
 </h1>
 <p align="center">
-  <a href="https://github.com/yagzie/NERV/blob/fifteen/LICENSE"><img loading="lazy" src="https://img.shields.io/github/license/yagzie/NERV?style=for-the-badge&logo=github"/></a>
-  <a href="https://github.com/yagzie/NERV/commits/fifteen"><img loading="lazy" src="https://img.shields.io/github/last-commit/yagzie/NERV/fifteen?style=for-the-badge"/></a>
+  <a href="https://github.com/yagzie/NERV/blob/paradigm/LICENSE"><img loading="lazy" src="https://img.shields.io/github/license/yagzie/NERV?style=for-the-badge&logo=github"/></a>
+  <a href="https://github.com/yagzie/NERV/commits/paradigm"><img loading="lazy" src="https://img.shields.io/github/last-commit/yagzie/NERV/paradigm?style=for-the-badge"/></a>
   <a href="https://github.com/yagzie/NERV/stargazers"><img loading="lazy" src="https://img.shields.io/github/stars/yagzie/NERV?style=for-the-badge"/></a>
   <a href="https://github.com/yagzie/NERV/graphs/contributors"><img loading="lazy" src="https://img.shields.io/github/contributors/yagzie/NERV?style=for-the-badge"/></a>
   <a href="https://github.com/yagzie/NERV/actions/workflows/build.yml"><img loading="lazy" src="https://img.shields.io/github/actions/workflow/status/yagzie/NERV/build.yml?style=for-the-badge"/></a>

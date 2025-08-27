@@ -104,6 +104,9 @@ case "$1" in
     "prebuilts/samsung/r11sxxx")
         FIRMWARE="SM-S711B/EUX/358615311234564"
         ;;
+    "prebuilts/samsung/e1qzcx")
+        FIRMWARE="SM-S9210/CHC/356724910402671"
+        ;;
     *)
         echo "Firmware not set for path $1"
         exit 1

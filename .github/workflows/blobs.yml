@@ -15,8 +15,6 @@ jobs:
         include:
           - module: "Galaxy A05s (a05snsdxx)"
             path: "prebuilts/samsung/a05snsdxx"
-          - module: "Galaxy A16 5G (a16xxx)"
-            path: "prebuilts/samsung/a16xxx"
           - module: "Galaxy A36 5G (a36xqnaxx)"
             path: "prebuilts/samsung/a36xqnaxx"
           - module: "Galaxy A52s 5G (a52sxqxx)"
@@ -29,8 +27,6 @@ jobs:
             path: "prebuilts/samsung/b0sxxx"
           - module: "Galaxy S23 Ultra (dm3qxxx)"
             path: "prebuilts/samsung/dm3qxxx"
-          - module: "Galaxy Tab S9 (gts9xxx)"
-            path: "prebuilts/samsung/gts9xxx"
           - module: "Galaxy Tab S9 FE 5G (gts9fexx)"
             path: "prebuilts/samsung/gts9fexx"
           - module: "Galaxy S25 (pa1qxx)"

@@ -80,7 +80,8 @@ ADD_TO_WORK_DIR "pa1qxxx" "system" "system/lib64/libnfc_sec_jni.so"
 ADD_TO_WORK_DIR "pa1qxxx" "system" "system/lib64/libnfc-nci_flags.so"
 ADD_TO_WORK_DIR "pa1qxxx" "system" "system/lib64/libnfc-sec.so"
 ADD_TO_WORK_DIR "pa1qxxx" "system" "system/lib64/libstatslog_nfc.so"
-ADD_TO_WORK_DIR "pa1qxxx" "system" "system/priv-app/NfcNci/lib/arm64/libnfc_sec_jni.so"
+EVAL "ln -sf \"/system/lib64/libnfc_sec_jni.so\" \"$WORK_DIR/system/system/priv-app/NfcNci/lib/arm64/libnfc_sec_jni.so\""
+SET_METADATA "system" "system/priv-app/NfcNci/lib/arm64/libnfc_sec_jni.so" 0 0 644 "u:object_r:system_file:s0"
 LOG_STEP_OUT
 
 LOG_STEP_IN "- Adding a73xqxx wpa_supplicant"
@@ -89,6 +90,5 @@ LOG_STEP_OUT
 
 LOG_STEP_IN "- Adding a73xqxx light HAL"
 ADD_TO_WORK_DIR "a73xqxx" "vendor" "bin/hw/vendor.samsung.hardware.light-service"
-ADD_TO_WORK_DIR "a73xqxx" "vendor" "lib64/android.hardware.light-V1-ndk_platform.so"
 ADD_TO_WORK_DIR "a73xqxx" "vendor" "lib64/vendor.samsung.hardware.light-V1-ndk_platform.so"
 LOG_STEP_OUT

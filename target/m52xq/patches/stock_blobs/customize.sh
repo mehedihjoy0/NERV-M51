@@ -86,5 +86,6 @@ ADD_TO_WORK_DIR "pa1qxxx" "system" "system/lib64/libnfc_sec_jni.so"
 ADD_TO_WORK_DIR "pa1qxxx" "system" "system/lib64/libnfc-nci_flags.so"
 ADD_TO_WORK_DIR "pa1qxxx" "system" "system/lib64/libnfc-sec.so"
 ADD_TO_WORK_DIR "pa1qxxx" "system" "system/lib64/libstatslog_nfc.so"
-ADD_TO_WORK_DIR "pa1qxxx" "system" "system/priv-app/NfcNci/lib/arm64/libnfc_sec_jni.so"
+EVAL "ln -sf \"/system/lib64/libnfc_sec_jni.so\" \"$WORK_DIR/system/system/priv-app/NfcNci/lib/arm64/libnfc_sec_jni.so\""
+SET_METADATA "system" "system/priv-app/NfcNci/lib/arm64/libnfc_sec_jni.so" 0 0 644 "u:object_r:system_file:s0"
 LOG_STEP_OUT

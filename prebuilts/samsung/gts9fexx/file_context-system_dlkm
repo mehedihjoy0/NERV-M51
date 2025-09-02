@@ -1,0 +1,6 @@
+/system_dlkm u:object_r:system_dlkm_file:s0
+/system_dlkm/etc u:object_r:system_dlkm_file:s0
+/system_dlkm/etc/NOTICE\.xml\.gz u:object_r:system_dlkm_file:s0
+/system_dlkm/etc/build\.prop u:object_r:system_dlkm_file:s0
+/system_dlkm/etc/fs_config_dirs u:object_r:system_dlkm_file:s0
+/system_dlkm/etc/fs_config_files u:object_r:system_dlkm_file:s0

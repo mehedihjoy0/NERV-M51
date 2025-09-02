@@ -1,0 +1,6 @@
+ 0 0 755 capabilities=0x0
+system_dlkm/etc 0 0 755 capabilities=0x0
+system_dlkm/etc/NOTICE.xml.gz 0 0 644 capabilities=0x0
+system_dlkm/etc/build.prop 0 0 644 capabilities=0x0
+system_dlkm/etc/fs_config_dirs 0 0 644 capabilities=0x0
+system_dlkm/etc/fs_config_files 0 0 644 capabilities=0x0

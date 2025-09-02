@@ -1,0 +1,17 @@
+/vendor_dlkm u:object_r:vendor_file:s0
+/vendor_dlkm/etc u:object_r:vendor_file:s0
+/vendor_dlkm/etc/NOTICE\.xml\.gz u:object_r:vendor_file:s0
+/vendor_dlkm/etc/build\.prop u:object_r:vendor_file:s0
+/vendor_dlkm/etc/fs_config_dirs u:object_r:vendor_file:s0
+/vendor_dlkm/etc/fs_config_files u:object_r:vendor_file:s0
+/vendor_dlkm/lib u:object_r:vendor_file:s0
+/vendor_dlkm/lib/modules u:object_r:vendor_file:s0
+/vendor_dlkm/lib/modules/fingerprint\.ko u:object_r:vendor_file:s0
+/vendor_dlkm/lib/modules/fingerprint_sysfs\.ko u:object_r:vendor_file:s0
+/vendor_dlkm/lib/modules/input_booster_lkm\.ko u:object_r:vendor_file:s0
+/vendor_dlkm/lib/modules/modules\.alias u:object_r:vendor_file:s0
+/vendor_dlkm/lib/modules/modules\.dep u:object_r:vendor_file:s0
+/vendor_dlkm/lib/modules/modules\.load u:object_r:vendor_file:s0
+/vendor_dlkm/lib/modules/modules\.softdep u:object_r:vendor_file:s0
+/vendor_dlkm/lib/modules/sec_debug_coredump\.ko u:object_r:vendor_file:s0
+/vendor_dlkm/lib/modules/wlan\.ko u:object_r:vendor_file:s0

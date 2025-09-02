@@ -1,0 +1,14 @@
+ 0 0 755 capabilities=0x0
+vendor_dlkm/etc 0 0 755 capabilities=0x0
+vendor_dlkm/etc/NOTICE.xml.gz 0 0 644 capabilities=0x0
+vendor_dlkm/etc/build.prop 0 0 644 capabilities=0x0
+vendor_dlkm/etc/fs_config_dirs 0 0 644 capabilities=0x0
+vendor_dlkm/etc/fs_config_files 0 0 644 capabilities=0x0
+vendor_dlkm/lib 0 0 755 capabilities=0x0
+vendor_dlkm/lib/modules 0 0 755 capabilities=0x0
+vendor_dlkm/lib/modules/a96t396.ko 0 0 644 capabilities=0x0
+vendor_dlkm/lib/modules/input_booster_lkm.ko 0 0 644 capabilities=0x0
+vendor_dlkm/lib/modules/modules.alias 0 0 644 capabilities=0x0
+vendor_dlkm/lib/modules/modules.dep 0 0 644 capabilities=0x0
+vendor_dlkm/lib/modules/modules.load 0 0 644 capabilities=0x0
+vendor_dlkm/lib/modules/modules.softdep 0 0 644 capabilities=0x0

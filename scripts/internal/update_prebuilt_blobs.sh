@@ -86,17 +86,17 @@ case "$1" in
     "prebuilts/samsung/dm3qxxx")
         FIRMWARE="SM-S918B/EUX/350196551234562"
         ;;
+    "prebuilts/samsung/e1qzcx")
+        FIRMWARE="SM-S9210/CHC/356724910402671"
+        ;;
     "prebuilts/samsung/gts9fexx")
         FIRMWARE="SM-X516B/EUX/354136921234567"
         ;;
-    "prebuilts/samsung/pa1qxx")
+    "prebuilts/samsung/pa1qxxx")
         FIRMWARE="SM-S931B/EUX/350466671872843"
         ;;
     "prebuilts/samsung/r0sxxx")
         FIRMWARE="SM-S901B/EUX/350020271234563"
-        ;;
-    "prebuilts/samsung/e1qzcx")
-        FIRMWARE="SM-S9210/CHC/356724910402671"
         ;;
     *)
         ABORT "Firmware not set for path $1"

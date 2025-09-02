@@ -79,12 +79,12 @@ DELETE_FROM_WORK_DIR "system" "system/saiv"
 ADD_TO_WORK_DIR "a73xqxx" "system" "system/saiv" 0 0 755 "u:object_r:system_file:s0"
 LOG_STEP_OUT
 
-LOG_STEP_IN "- Adding pa1qxx nfc blobs"
+LOG_STEP_IN "- Adding pa1qxxx nfc blobs"
 DELETE_FROM_WORK_DIR "system" "system/lib64/libnfc_nxpsn_jni.so"
 DELETE_FROM_WORK_DIR "system" "system/priv-app/NfcNci/lib/arm64/libnfc_nxpsn_jni.so"
-ADD_TO_WORK_DIR "pa1qxx" "system" "system/lib64/libnfc_sec_jni.so"
-ADD_TO_WORK_DIR "pa1qxx" "system" "system/lib64/libnfc-nci_flags.so"
-ADD_TO_WORK_DIR "pa1qxx" "system" "system/lib64/libnfc-sec.so"
-ADD_TO_WORK_DIR "pa1qxx" "system" "system/lib64/libstatslog_nfc.so"
-ADD_TO_WORK_DIR "pa1qxx" "system" "system/priv-app/NfcNci/lib/arm64/libnfc_sec_jni.so"
+ADD_TO_WORK_DIR "pa1qxxx" "system" "system/lib64/libnfc_sec_jni.so"
+ADD_TO_WORK_DIR "pa1qxxx" "system" "system/lib64/libnfc-nci_flags.so"
+ADD_TO_WORK_DIR "pa1qxxx" "system" "system/lib64/libnfc-sec.so"
+ADD_TO_WORK_DIR "pa1qxxx" "system" "system/lib64/libstatslog_nfc.so"
+ADD_TO_WORK_DIR "pa1qxxx" "system" "system/priv-app/NfcNci/lib/arm64/libnfc_sec_jni.so"
 LOG_STEP_OUT

@@ -32,10 +32,14 @@ if [[ "$SOURCE_SUPPORT_CUTOUT_PROTECTION" != "$TARGET_SUPPORT_CUTOUT_PROTECTION"
     sed -i "$(sed -n "/config_enableDisplayCutoutProtection/=" "$FTP") c$R" "$FTP"
 fi
 
-# Set custom Display ID prop
-STOCK_PROP="$(GET_PROP "system" "ro.build.display.id")"
-CUSTOM_PROP="Project NERV $(echo -n ${ROM_VERSION} | cut -d "-" -f1)-${ROM_CODENAME} - ${TARGET_CODENAME} [${STOCK_PROP}]"
-SET_PROP "system" "ro.build.display.id" "$CUSTOM_PROP"
+# Set build ID
+ROM_STATUS=""
+$ROM_IS_OFFICIAL || ROM_STATUS=" UNOFFICIAL"
+VALUE="$(GET_PROP "$WORK_DIR/system/system/build.prop" "ro.build.display.id")"
+SET_PROP "system" "ro.build.display.id" "ExtremeROM$ROM_STATUS $ROM_CODENAME $ROM_VERSION - $TARGET_CODENAME ($VALUE)"
+SET_PROP "system" "ro.extremerom.official" "$ROM_IS_OFFICIAL"
+SET_PROP "system" "ro.extremerom.version" "$ROM_VERSION"
+SET_PROP "system" "ro.extremerom.codename" "$ROM_CODENAME"
 
 # Crok's RAM Managment Fix
 # https://github.com/crok/crokrammgmtfix/blob/master/service.sh#L27-L32

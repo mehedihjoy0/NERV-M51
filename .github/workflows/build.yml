@@ -1,11 +1,12 @@
-name: Build ProjectNERV
+name: Build ExtremeROM
 
 on:
   workflow_dispatch:
   pull_request:
   push:
     branches:
-      - 'paradigm'
+      - 'fifteen'
+
 
 jobs:
   build:
@@ -14,7 +15,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: [a51, a52sxq, a71, a73xq, m52xq, r9q, r9q2]
+        target: [m51]
 
     steps:
       - name: Checkout repo
@@ -42,62 +43,48 @@ jobs:
         run: |
           sudo apt update
           DEBIAN_FRONTEND=noninteractive sudo apt install -yq \
-            p7zip-full jq attr ccache clang ffmpeg golang \
+            jq attr ccache clang ffmpeg golang p7zip \
             libbrotli-dev libgtest-dev libprotobuf-dev libunwind-dev libpcre2-dev \
             libzstd-dev linux-modules-extra-$(uname -r) lld jq protobuf-compiler pcre2-utils webp \
-            curl xxd patchelf flex bison libarchive-tools build-essential python3.12-venv device-tree-compiler
+            curl xxd patchelf flex bison libarchive-tools build-essential python3.12-venv
           sudo modprobe erofs f2fs
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          echo -n "${{ secrets.PLATFORM_KEY_PK8 }}" | base64 --decode > security/platform.pk8
-          echo -n "${{ secrets.PLATFORM_KEY_PEM }}" | base64 --decode > security/platform.x509.pem
 
-      - name: Set up JDK 11
-        uses: actions/setup-java@v4
+      - name: Set up JDK 21
+        uses: actions/setup-java@v5
         with:
           distribution: 'temurin'
-          java-version: '11'
+          java-version: '21'
           cache: 'gradle'
 
       - name: Build dependencies
         run: |
           source ./buildenv.sh ${{ matrix.target }}
-          ./scripts/build_dependencies.sh
+          source ./scripts/utils/firmware_utils.sh
+          source ./out/tools/venv/bin/activate
 
-      - name: Download source firmware
+      - name: Download stock firmwares
         run: |
           source ./buildenv.sh ${{ matrix.target }}
-          ./scripts/download_fw.sh --ignore-target
+          ./scripts/download_fw.sh
 
-      - name: Extract source firmware
+      - name: Extract stock firmwares
         run: |
           source ./buildenv.sh ${{ matrix.target }}
-          ./scripts/extract_fw.sh --ignore-target
-
-      - name: Download target firmware
-        run: |
-          source ./buildenv.sh ${{ matrix.target }}
-          ./scripts/download_fw.sh --ignore-source
-
-      - name: Extract target firmware
-        run: |
-          source ./buildenv.sh ${{ matrix.target }}
-          ./scripts/extract_fw.sh --ignore-source
+          ./scripts/extract_fw.sh
 
       - name: Build ROM
         run: |
           source ./buildenv.sh ${{ matrix.target }}
-          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]] && \
-              [[ "${{ github.ref }}" == "refs/heads/paradigm" ]]; then
-              ./scripts/make_rom.sh
-          else
-              ./scripts/make_rom.sh --no-rom-zip
-          fi
+          ./scripts/make_rom.sh
 
       - name: Upload to GoFile
-        if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/paradigm'
         run: |
           ZIP_FILE=$(find out -maxdepth 1 -type f -name "*.zip" | head -n 1)
+
           RESPONSE=$(curl -s -F "file=@$ZIP_FILE" -F "token=${{ secrets.GOFILE_TOKEN }}" -F "folderId=${{ secrets.GOFILE_FOLDER_ID }}" "https://upload-eu-par.gofile.io/uploadFile")
-          echo "Download link:"
+
+          echo "Uploaded successfully! Download link:"
           echo "$RESPONSE" | jq -r '.data.downloadPage'
+          echo "WARNING! THESE BUILDS MAY NOT BOOTABLE, ONLY FLASH FOR TESTING PURPOSES ONLY IF THE DEVELOPER TOLD YOU."

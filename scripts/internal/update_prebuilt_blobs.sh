@@ -20,9 +20,6 @@
 
 set -Ee
 
-source "$SRC_DIR/scripts/utils/module_utils.sh" || exit 1
-source "$SRC_DIR/scripts/utils/log_utils.sh" || exit 1
-
 # [
 GET_LATEST_FIRMWARE()
 {
@@ -31,13 +28,14 @@ GET_LATEST_FIRMWARE()
 }
 #]
 
-if [[ "$#" != 1 ]]; then
-    LOG "Usage: update_prebuilt_blobs <path>"
+if [ "$#" != 1 ]; then
+    echo "Usage: update_prebuilt_blobs <path>"
     exit 1
 fi
 
-if [[ ! -d "$SRC_DIR/$1" ]]; then
-    ABORT "Folder not found: \"$SRC_DIR/$1\""
+if [ ! -d "$SRC_DIR/$1" ]; then
+    echo "Folder not found: $SRC_DIR/$1"
+    exit 1
 fi
 
 MODULE="$SRC_DIR/$1"
@@ -65,59 +63,65 @@ if [ -d "$MODULE/system_ext" ]; then
 fi
 
 case "$1" in
-    "prebuilts/samsung/a05snsdxx")
-        FIRMWARE="SM-A057F/INS/356480620213714"
-        ;;
-    "prebuilts/samsung/a36xqnaxx")
-        FIRMWARE="SM-A366E/INS/357178223702799"
-        ;;
-    "prebuilts/samsung/a52qnsxx")
-        FIRMWARE="SM-A525F/SER/352938771234569"
+    "prebuilts/samsung/a26xxx")
+        FIRMWARE="SM-A266B/EUX/350439761193107"
         ;;
     "prebuilts/samsung/a73xqxx")
-        FIRMWARE="SM-A736B/XME/352828291234563"
+        FIRMWARE="SM-A736B/SEK/352828291234563"
         ;;
     "prebuilts/samsung/b0sxxx")
-        FIRMWARE="SM-S908B/BTE/350048581234569"
+        FIRMWARE="SM-S908B/EUX/350048582870148"
         ;;
-    "prebuilts/samsung/b5qxxx")
-        FIRMWARE="SM-F731B/EUX/350929871234569"
+    "prebuilts/samsung/b6qxxx")
+        FIRMWARE="SM-F956B/EUX/351451341950251"
         ;;
     "prebuilts/samsung/dm3qxxx")
         FIRMWARE="SM-S918B/EUX/350196551234562"
         ;;
-    "prebuilts/samsung/e1qzcx")
-        FIRMWARE="SM-S9210/CHC/356724910402671"
+    "prebuilts/samsung/e1sxxx")
+        FIRMWARE="SM-S921B/EUX/350070120202022"
         ;;
-    "prebuilts/samsung/gts9fexx")
-        FIRMWARE="SM-X516B/EUX/354136921234567"
+    "prebuilts/samsung/e2sxxx")
+        FIRMWARE="SM-S926B/EUX/355622360977567"
         ;;
-    "prebuilts/samsung/pa1qxxx")
-        FIRMWARE="SM-S931B/EUX/350466671872843"
+    "prebuilts/samsung/gts10fewifixx")
+        FIRMWARE="SM-X520/EUX/R52Y30G0M0T"
         ;;
-    "prebuilts/samsung/r0sxxx")
-        FIRMWARE="SM-S901B/EUX/350020271234563"
+    "prebuilts/samsung/p3sxxx")
+        FIRMWARE="SM-G998B/AUT/352731458300849"
+        ;;
+    "prebuilts/samsung/pa3qxxx")
+        FIRMWARE="SM-S938B/EUX/356597450035295"
+        ;;
+    "prebuilts/samsung/pa3qzcx")
+        FIRMWARE="SM-S9380/CHC/355534491000674"
+        ;;
+    "prebuilts/samsung/r12sxxx")
+        FIRMWARE="SM-S721B/EUX/351273090276500"
         ;;
     *)
-        ABORT "Firmware not set for path $1"
+        echo "Firmware not set for path $1"
+        exit 1
         ;;
 esac
 
 MODEL=$(echo -n "$FIRMWARE" | cut -d "/" -f 1)
 REGION=$(echo -n "$FIRMWARE" | cut -d "/" -f 2)
 
-[[ -z "$(GET_LATEST_FIRMWARE)" ]] && exit 1
-if [[ -f "$MODULE/.current" ]]; then
-    if [[ "$(GET_LATEST_FIRMWARE)" == "$(cat "$MODULE/.current")" ]]; then
-        LOG "- Nothing to do."
-        exit 0
-    fi
+[ -z "$(GET_LATEST_FIRMWARE)" ] && exit 1
+if [[ "$(GET_LATEST_FIRMWARE)" == "$(cat "$MODULE/.current")" ]]; then
+    echo "Nothing to do."
+    exit 0
 fi
 
-LOG_STEP_IN "- Updating $MODULE blobs"
+echo -e "Updating $MODULE blobs\n"
 
-bash "$SRC_DIR/scripts/download_fw.sh" --ignore-target --ignore-source "$FIRMWARE"
-bash "$SRC_DIR/scripts/extract_fw.sh" --ignore-target --ignore-source "$FIRMWARE"
+export SOURCE_FIRMWARE="$FIRMWARE"
+export TARGET_FIRMWARE="$FIRMWARE"
+export SOURCE_EXTRA_FIRMWARES=""
+export TARGET_EXTRA_FIRMWARES=""
+"$SRC_DIR/scripts/download_fw.sh" --force --ignore-target
+"$SRC_DIR/scripts/extract_fw.sh" --force --ignore-target
 
 for i in $BLOBS; do
     if [[ "$i" == *[0-9] ]]; then
@@ -129,14 +133,12 @@ for i in $BLOBS; do
 
     if [[ "$(wc -c "$FW_DIR/${MODEL}_${REGION}/$i" | cut -d " " -f 1)" -gt "52428800" ]]; then
         rm "$OUT."*
-        EVAL "split -d -b 52428800 \"$FW_DIR/${MODEL}_${REGION}/$i\" \"$OUT.\""
+        split -d -b 52428800 "$FW_DIR/${MODEL}_${REGION}/$i" "$OUT."
     else
-        cp -fa "$FW_DIR/${MODEL}_${REGION}/$i" "$OUT"
+        cp -a "$FW_DIR/${MODEL}_${REGION}/$i" "$OUT"
     fi
 done
 
-cp -fa "$FW_DIR/${MODEL}_${REGION}/.extracted" "$MODULE/.current"
-
-LOG_STEP_OUT
+cp -a "$FW_DIR/${MODEL}_${REGION}/.extracted" "$MODULE/.current"
 
 exit 0

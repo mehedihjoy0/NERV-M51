@@ -24,7 +24,7 @@ TARGET_FIRMWARE_PATH="$(cut -d "/" -f 1 -s <<< "$TARGET_FIRMWARE")_$(cut -d "/" 
 
 COPY_SOURCE_FIRMWARE()
 {
-    local SOURCE_FOLDERS="product system"
+    local SOURCE_FOLDERS="odm product system prism optics"
     for f in $SOURCE_FOLDERS; do
         if [ -d "$FW_DIR/$SOURCE_FIRMWARE_PATH/$f" ]; then
             LOG "- Copying /$f from source firmware"
@@ -116,7 +116,7 @@ COPY_SOURCE_FIRMWARE()
 
 COPY_TARGET_FIRMWARE()
 {
-    local TARGET_FOLDERS="odm odm_dlkm system_dlkm vendor vendor_dlkm"
+    local TARGET_FOLDERS="odm_dlkm system_dlkm vendor vendor_dlkm"
     for f in $TARGET_FOLDERS; do
         if [ -d "$FW_DIR/$TARGET_FIRMWARE_PATH/$f" ]; then
             LOG "- Copying /$f from target firmware"
@@ -137,12 +137,6 @@ COPY_TARGET_KERNEL()
         LOG_STEP_IN "- Copying target firmware kernel images"
         EVAL "rsync -a --mkpath --delete \"$FW_DIR/$TARGET_FIRMWARE_PATH/kernel\" \"$WORK_DIR\"" || exit 1
         $TARGET_KEEP_ORIGINAL_SIGN || find "$WORK_DIR/kernel" -mindepth 1 -exec "$SRC_DIR/scripts/unsign_bin.sh" {} \;
-        if $TARGET_FS_CHANGED; then
-            LOG "- Patching kernel fstab to $TARGET_OS_FILE_SYSTEM"
-            IMG="$WORK_DIR/kernel/boot.img"
-            [ -f "$WORK_DIR/kernel/vendor_boot.img" ] && IMG="$WORK_DIR/kernel/vendor_boot.img"
-            "$SRC_DIR/scripts/change_fs_type.sh" "$IMG" &> /dev/null
-        fi
         LOG_STEP_OUT
     else
         [ -d "$WORK_DIR/kernel" ] && rm -rf "$WORK_DIR/kernel"

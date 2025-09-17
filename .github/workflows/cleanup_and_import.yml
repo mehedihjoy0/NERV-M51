@@ -1,0 +1,235 @@
+name: Cleanup specified paths on branch, then import from ExtremeROM(s)
+
+on:
+  workflow_dispatch:
+    inputs:
+      clean_branch:
+        description: 'Branch to remove the listed paths from (backup will be made)'
+        default: 'paradigm'
+      delete_paths:
+        description: 'Newline-separated paths to delete from clean_branch'
+        default: |
+          unica/mods/network_speed
+          unica/mods/csc
+          external
+      import_target_branch:
+        description: 'Branch to import files into (destination for imported files)'
+        default: 'main'
+      extreme_branch:
+        description: 'Branch name in ExtremeROM to use'
+        default: 'fifteen'
+      extreme_repo:
+        description: 'ExtremeROM repo URL'
+        default: 'https://github.com/ExtremeXT/ExtremeROM.git'
+      mehedi_repo:
+        description: 'Your ExtremeROM-M51 repo URL'
+        default: 'https://github.com/mehedihjoy0/ExtremeROM-M51.git'
+      mehedi_branch:
+        description: 'Branch name in your ExtremeROM-M51 (if present)'
+        default: 'fifteen'
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    outputs:
+      cleanup-branch: ${{ steps.set.output_cleanup_branch }}
+    steps:
+      - name: Checkout repository (full history)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure git user
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Determine branch to clean and create backup
+        id: set
+        run: |
+          CLEAN_BRANCH="${{ inputs.clean_branch }}"
+          echo "Cleaning branch: $CLEAN_BRANCH"
+          # Ensure branch exists
+          if git show-ref --verify --quiet "refs/heads/$CLEAN_BRANCH"; then
+            # create a backup branch
+            BACKUP="backup/${CLEAN_BRANCH}-${GITHUB_RUN_ID}"
+            git branch -f "$BACKUP" "$CLEAN_BRANCH"
+            git push origin "$BACKUP"
+            echo "Created backup branch $BACKUP"
+            echo "output_cleanup_branch=$BACKUP" >> $GITHUB_OUTPUT
+          else
+            echo "Branch $CLEAN_BRANCH does not exist locally — trying to fetch from origin"
+            if git ls-remote --exit-code --heads origin "$CLEAN_BRANCH"; then
+              git fetch origin "$CLEAN_BRANCH":"$CLEAN_BRANCH"
+              BACKUP="backup/${CLEAN_BRANCH}-${GITHUB_RUN_ID}"
+              git branch -f "$BACKUP" "$CLEAN_BRANCH"
+              git push origin "$BACKUP"
+              echo "Created backup branch $BACKUP"
+              echo "output_cleanup_branch=$BACKUP" >> $GITHUB_OUTPUT
+            else
+              echo "ERROR: branch $CLEAN_BRANCH not found on remote. Aborting."
+              exit 1
+            fi
+          fi
+
+      - name: Checkout clean branch
+        run: |
+          git checkout "${{ inputs.clean_branch }}"
+
+      - name: Remove specified paths from branch (git rm -r)
+        run: |
+          set -euo pipefail
+          IFS=$'\n'
+          CHANGED=0
+          for p in ${{ inputs.delete_paths }}; do
+            echo "Attempting remove: '$p'"
+            # remove files/dirs if exist in tree; ignore if missing
+            git rm -r --ignore-unmatch "$p" || true
+            # also remove empty parent dirs from git index (won't touch working tree folders)
+            CHANGED=$((CHANGED + $(git status --porcelain | wc -l)))
+          done
+          # If there are changes staged, commit & push
+          if git diff --cached --quiet; then
+            echo "No matching files were removed/staged; nothing to commit on branch ${{ inputs.clean_branch }}"
+          else
+            git commit -m "Remove paths: ${{ inputs.delete_paths }} (cleanup before import). Backup at ${{ steps.set.output_cleanup_branch }}."
+            git push origin "${{ inputs.clean_branch }}"
+            echo "Deleted specified paths and pushed to origin/${{ inputs.clean_branch }}"
+          fi
+
+  import:
+    needs: cleanup
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout target repo (full history)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+          persist-credentials: true
+
+      - name: Setup git user
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Clone source repos (ExtremeROM and mehedi repo)
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/extreme /tmp/mehedi
+          echo "Cloning ExtremeROM (${{ inputs.extreme_branch }})..."
+          git clone --depth=1 --branch=${{ inputs.extreme_branch }} --recurse-submodules ${{ inputs.extreme_repo }} /tmp/extreme || (echo "Failed to clone ExtremeROM; aborting" && exit 1)
+          echo "Attempting to clone ${{ inputs.mehedi_repo }} (branch ${{ inputs.meh edi_branch }})..."
+          if git ls-remote --exit-code --heads ${{ inputs.meh edi_repo }} ${{ inputs.meh edi_branch }} 2>/dev/null; then
+            git clone --depth=1 --branch=${{ inputs.meh edi_branch }} --recurse-submodules ${{ inputs.meh edi_repo }} /tmp/mehedi || true
+          else
+            echo "mehedi repo/branch not found — continuing without it"
+            mkdir -p /tmp/mehedi
+          fi
+
+      - name: Sync files (copy & overwrite files, do NOT delete other folders)
+        env:
+          TARGET_BRANCH: ${{ inputs.import_target_branch }}
+        run: |
+          set -euo pipefail
+          cd $GITHUB_WORKSPACE
+          echo "Switching to import target branch: $TARGET_BRANCH"
+          git checkout $TARGET_BRANCH
+
+          # Ensure destination dirs exist
+          mkdir -p mods/csc
+          mkdir -p mods/phonelink
+          mkdir -p scripts
+          mkdir -p unica/mods/settings/smali/system/priv-app/SecSettings/SecSettings.apk
+          mkdir -p unica/mods/settings/smali/system/priv-app/SettingsProvider/SettingsProvider.apk
+          mkdir -p prebuilts/kernels/m51
+          mkdir -p prebuilts/samsung/a52qnsxx
+          mkdir -p target/m51
+          mkdir -p unica/patches/custom_kernel
+          mkdir -p unica/patches/nfc
+          mkdir -p .github/workflows
+
+          RSYNC_OPTS="-a --checksum --omit-dir-times --no-perms --no-owner --no-group"
+
+          echo "Copy: unica/mods/csc -> mods/csc"
+          rsync $RSYNC_OPTS /tmp/extreme/unica/mods/csc/ ./mods/csc/ || echo "no csc folder in extreme"
+
+          echo "Copy: unica/mods/phonelink -> mods/phonelink"
+          rsync $RSYNC_OPTS /tmp/extreme/unica/mods/phonelink/ ./mods/phonelink/ || echo "no phonelink in extreme"
+
+          echo "Copy: scripts (from ExtremeROM) -> ./scripts/"
+          rsync $RSYNC_OPTS /tmp/extreme/scripts/ ./scripts/ || echo "no scripts in extreme"
+
+          echo "Copy specific patch files (SecSettings / SettingsProvider)"
+          rsync $RSYNC_OPTS /tmp/extreme/unica/mods/settings/smali/system/priv-app/SecSettings/SecSettings.apk/0005-Add-ExtremeROM-Logo.patch ./unica/mods/settings/smali/system/priv-app/SecSettings/SecSettings.apk/ || true
+          rsync $RSYNC_OPTS /tmp/extreme/unica/mods/settings/smali/system/priv-app/SecSettings/SecSettings.apk/0004-Enable-gestures-by-default.patch ./unica/mods/settings/smali/system/priv-app/SecSettings/SecSettings.apk/ || true
+          rsync $RSYNC_OPTS /tmp/extreme/unica/mods/settings/smali/system/priv-app/SettingsProvider/SettingsProvider.apk/0001-Enable-gestures-by-default.patch ./unica/mods/settings/smali/system/priv-app/SettingsProvider/SettingsProvider.apk/ || true
+
+          echo "Copy any non-submodule files under external/"
+          rsync $RSYNC_OPTS --exclude='.git' /tmp/extreme/external/ ./external/ || echo "no external in extreme"
+
+          echo "Copy mehedihjoy0/ExtremeROM-M51 files (if present)..."
+          rsync $RSYNC_OPTS /tmp/mehedi/scripts/download_fw.sh ./scripts/download_fw.sh || true
+          rsync $RSYNC_OPTS /tmp/mehedi/.github/workflows/build.yml ./.github/workflows/build.yml || true
+          rsync $RSYNC_OPTS /tmp/mehedi/prebuilts/kernels/m51/ ./prebuilts/kernels/m51/ || true
+          rsync $RSYNC_OPTS /tmp/mehedi/prebuilts/samsung/a52qnsxx/ ./prebuilts/samsung/a52qnsxx/ || true
+          rsync $RSYNC_OPTS /tmp/mehedi/target/m51/ ./target/m51/ || true
+          rsync $RSYNC_OPTS /tmp/mehedi/unica/patches/custom_kernel/ ./unica/patches/custom_kernel/ || true
+          rsync $RSYNC_OPTS /tmp/mehedi/unica/patches/nfc/ ./unica/patches/nfc/ || true
+
+      - name: Handle submodules declared by ExtremeROM (under external/)
+        run: |
+          set -euo pipefail
+          cd $GITHUB_WORKSPACE
+          if [ -f /tmp/extreme/.gitmodules ]; then
+            echo "Adding/updating submodules under external/ from upstream .gitmodules..."
+            git -C /tmp/extreme config -f /tmp/extreme/.gitmodules --get-regexp '^submodule\..*\.path$' | while read -r key path; do
+              name=${key#submodule.}
+              name=${name%.path}
+              url=$(git -C /tmp/extreme config -f /tmp/extreme/.gitmodules --get submodule.$name.url || true)
+              case "$path" in
+                external/*)
+                  echo "Submodule $name -> path=$path url=$url"
+                  if ! git config -f .gitmodules --get-regexp "submodule\..*\.path" | grep -q " $path$"; then
+                    echo "Adding submodule $path"
+                    git submodule add --force "$url" "$path" || echo "git submodule add may have failed or already exists"
+                  else
+                    echo "Submodule path $path already present in .gitmodules — skipping add"
+                  fi
+                  parent_commit=$(git -C /tmp/extreme rev-parse HEAD)
+                  subsha=$(git -C /tmp/extreme ls-tree $parent_commit "$path" | awk '{print $3}')
+                  if [ -n "$subsha" ]; then
+                    echo "Attempting to checkout submodule $path at $subsha"
+                    git -C "$path" fetch --depth=1 origin || true
+                    git -C "$path" fetch origin "$subsha" || true
+                    git -C "$path" checkout --detach "$subsha" || echo "Could not checkout $subsha in $path"
+                    git add "$path"
+                  else
+                    echo "No recorded commit for submodule $path in upstream HEAD (skipping specific checkout)"
+                  fi
+                  ;;
+                *)
+                  ;;
+              esac
+            done
+          else
+            echo "No .gitmodules found in /tmp/extreme — skipping submodule handling"
+          fi
+
+      - name: Commit & push imported files
+        env:
+          TARGET_BRANCH: ${{ inputs.import_target_branch }}
+        run: |
+          set -euo pipefail
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes to commit on $TARGET_BRANCH"
+          else
+            git commit -m "Import/replace files from ExtremeROM (fifteen) and ExtremeROM-M51 (fifteen). Preserved external/* as submodules where declared."
+            git push origin $TARGET_BRANCH
+            echo "Import completed and pushed to $TARGET_BRANCH"
+          fi

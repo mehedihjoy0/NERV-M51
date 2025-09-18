@@ -37,7 +37,7 @@ DOWNLOAD_FIRMWARE()
         # Special handling for source firmware - download from the specified URL
         mkdir -p "$ODIN_DIR/${MODEL}_${CSC}"
         echo "- Downloading source firmware from custom URL..."
-        curl -s --retry 5 --retry-delay 5 "https://29-samfw.cloud/v2/IxJCDiMnLjg0CC8GHjAgPTIxBzsSMR4lFzssIDs2ByAzMUEgOzEUQDMQMCMBOyw/MjYvNg8vQQU0F0E7EkA2FA02LB4SCyEpFyUuQBc2Li8hAB8/LyVBAQ8bQTMPLDYwMkApDQ8HBxcyLBUdNThBJAMHLAs7OzwfDxczIyExBwEhJwU5NRcfHTJABkIeCzwGHgM8FCMkNDEjCxVACTghHzInDQYuFx8rIwAvJCFAMxE8EQY5NRshDjURPho0ES8kNRYhOR44LwsJEQc5NBsjKyEAPg4hAAYsLjgeLDQRHg4yJTMsMiUNKzwAPh8mGzk5FyUzDTUHQQEuByADISxBIwMnOUANQAokMzYCICMXPjkDFzA1CS8pDTsxHhwzQAZCOzEHHjMsNCsNMT4eODAeHgkvIxQjAwcEODEvLxcHPgMBAwgGDSwpPDskKQgXOzQwOAAhKTw/FD01OCBCJgcsKyMXQjkSAAo/LwceHTUkIRs1JxQOLjEdQDIIBzA1LwgkDTsfMSEbIAsjOAZCIwM0MAEWBQYBFjw5Iw0TEw==" -o "$ODIN_DIR/${MODEL}_${CSC}/firmware.zip"
+        curl -s --retry 5 --retry-delay 5 "https://29-samfw.cloud/v2/IxJCDiMnLjMzNkEaOwgfMQ8nBx0yNh4lFzssIDs2ByAzMUEgOzEUQDMQMCMBOyw/NRcfGhcXQTkeQDNBNTsuHiEnFEEBLx4xLjsUHCMLHhA0GwIdOD8wOy4xFAQzESwXLzECBzNAITgvNgIFNDspBzUWHic8Awc4Mi8HASEsBxc1CAc7LwcCFgM4BkIeCzwGHgM8FCMkNDEjCxVACTghHzInDQYuFx8rIwAvJCFAMxE8EQY5NRshDjURPho0ES8kNRYhOR44LwsJEQc5NBsjKyEAPg4hAAYsLjgeLDQRHg4yJTMsMiUNKzwAPh8mGzk5FyUzDTUHQQEuByADISxBIwMnOUANQAokMzYCICMXPjkDFzA1CS8pDTsxHhwzQAZCOzEHHjMsNCsNMT4eODAeHgkvIxQjAwcEODEvLxcHPgMBAwgGDSwpPDskKQgXOzQwOAAhKTw/FD01OCBCJhspFyM4LjsvEUI5FxcHLCEsIkA0Cx4fAxEHKwkvM0EBFxQLNS8uLC87HwYjOAZCIwM0MAEWBT8jJBUkHg0TEw==" -o "$ODIN_DIR/${MODEL}_${CSC}/firmware.zip"
         
         echo "- Extracting firmware..."
         unzip -q "$ODIN_DIR/${MODEL}_${CSC}/firmware.zip" -d "$ODIN_DIR/${MODEL}_${CSC}"

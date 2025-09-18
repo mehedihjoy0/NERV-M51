@@ -103,6 +103,24 @@ run_cmd()
 }
 
 alias unica=run_cmd
+alias extremerom=run_cmd
+alias erom=run_cmd
+alias m="./scripts/make_rom.sh"
+
+# https://android.googlesource.com/platform/build/+/refs/tags/android-15.0.0_r1/envsetup.sh#806
+croot()
+{
+    if [ -d "$SRC_DIR" ]; then
+        if [ "$1" ]; then
+            cd "$SRC_DIR/$1"
+        else
+            cd "$SRC_DIR"
+        fi
+    else
+        echo "Couldn't locate the top of the tree. Try setting SRC_DIR."
+        return 1
+    fi
+}
 # ]
 
 SRC_DIR="$(_GET_SRC_DIR)"
@@ -117,6 +135,7 @@ export DEBUG=false
 export SRC_DIR
 export OUT_DIR="$SRC_DIR/out"
 export TMP_DIR="$OUT_DIR/tmp"
+export KERNEL_TMP_DIR="$OUT_DIR/kernel_tmp"
 export ODIN_DIR="$OUT_DIR/odin"
 export FW_DIR="$OUT_DIR/fw"
 export TOOLS_DIR="$OUT_DIR/tools"
@@ -173,10 +192,6 @@ mkdir -p "$OUT_DIR/target/$SELECTED_TARGET"
 set -o allexport; source "$OUT_DIR/config.sh"; set +o allexport
 
 unset TARGETS SELECTED_TARGET
-
-if [ -n "$TARGET_ASSERT_MODEL" ] && ! grep -q "TARGET_ASSERT_MODEL" "$SRC_DIR/target/$TARGET_CODENAME/config.sh"; then
-    unset TARGET_ASSERT_MODEL
-fi
 
 echo "=============================="
 sed "/Automatically/d" "$OUT_DIR/config.sh"

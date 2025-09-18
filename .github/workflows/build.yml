@@ -2,7 +2,11 @@ name: Build ExtremeROM
 
 on:
   workflow_dispatch:
-
+  pull_request:
+  push:
+    branches:
+      - 'paradigm'
+      
 jobs:
   build:
     runs-on: ubuntu-24.04
